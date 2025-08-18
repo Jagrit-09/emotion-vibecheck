@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Emotion Detector</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #d3cce3, #e9e4f0);
+      text-align: center;
+      padding: 60px;
+    }
+    form {
+      margin-bottom: 30px;
+      background: #ffffff;
+      display: inline-block;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"], input[type="file"] {
+      width: 280px;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background: #6a11cb;
+      background: linear-gradient(to right, #2575fc, #6a11cb);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .result {
+      margin-top: 30px;
+      font-size: 18px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 450px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .feedback button {
+      background-color: #e67e22;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Emotion Detector</h1>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="text" name="text_input" placeholder="Type a message..." />
+    <br>
+    <p>or upload a screenshot:</p>
+    <input type="file" name="screenshot" accept="image/*" />
+    <br><br>
+    <button type="submit">Detect Emotion</button>
+  </form>
+
+  {% if prediction %}
+    <div class="result">
+      <p><strong>Extracted Text:</strong> {{ prediction.text }}</p>
+      <p><strong>Predicted Emotion:</strong> {{ prediction.emotion }} (Confidence: {{ prediction.confidence }})</p>
+      <div class="feedback">
+        <p>Was this correct?</p>
+        <button onclick="sendFeedback(true)">✅ Correct</button>
+        <button onclick="sendFeedback(false)">❌ Wrong</button>
+        <div id="correctionField" style="display:none;">
+          <br>
+          <input type="text" id="correctEmotion" placeholder="Enter correct emotion">
+          <button onclick="submitCorrection()">Submit</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const feedback = {
+        text: "{{ prediction.text }}",
+        predicted_emotion: "{{ prediction.emotion }}",
+        confidence: "{{ prediction.confidence }}",
+        correct: null,
+        corrected_emotion: null
+      };
+
+      function sendFeedback(isCorrect) {
+        feedback.correct = isCorrect;
+        if (!isCorrect) {
+          document.getElementById("correctionField").style.display = "block";
+        } else {
+          fetch('/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(feedback)
+          }).then(() => alert("Thanks for your feedback!"));
+        }
+      }
+
+      function submitCorrection() {
+        feedback.corrected_emotion = document.getElementById("correctEmotion").value;
+        fetch('/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(feedback)
+        }).then(() => alert("Correction submitted. Thanks!"));
+      }
+    </script>
+  {% endif %}
+</body>
+</html>

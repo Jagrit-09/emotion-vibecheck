@@ -1,0 +1,5 @@
+flask
+transformers==4.54.1
+torch
+tokenizers
+gunicorn

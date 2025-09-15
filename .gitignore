@@ -1,0 +1,21 @@
+# Ignore virtual env
+venv310/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore datasets if too large (optional)
+*.jsonl
+*.json
+
+# Ignore model weights (we’ll load from Hugging Face instead)
+emotion-model/
+*.bin
+*.safetensors
+
+# Misc
+.DS_Store
+*.log

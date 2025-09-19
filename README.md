@@ -86,5 +86,5 @@ Chaudhry, J. (2025). *Emotion VibeCheck – Hinglish + English Emotion Detection
   author       = {Chaudhry, Jagrit},
   title        = {Emotion VibeCheck – Hinglish + English Emotion Detection},
   year         = {2025},
-  howpublished = {\url{https://github.com/Jagrit-09/ai-vibecheck}},
+  howpublished = {\url{https://github.com/Jagrit-09/emotion-vibecheck}},
 }
